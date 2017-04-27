@@ -8,4 +8,20 @@ node {
    stage('analyze') {
       sh 'mvn sonar:sonar -e |echo "ignore failure"'
    }
+   stage('Xray scan')
+      {
+        def xrayConfig = [
+          //Mandatory parameters
+          'buildName'         : env.JOB_NAME,
+          'buildNumber'       : '3',
+
+          //Optional
+          'failBuild'        :false //Default
+        ]
+
+        // Scan xray build
+        def xrayResults = artServer.xrayScan xrayConfig
+        // Print full report from xray
+        echo xrayResults as String
+      }
 }
